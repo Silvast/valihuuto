@@ -3,7 +3,11 @@
             [feedme :as feedme]
             [pdfboxing.text :as text]
             [clj-http.client :as client]
-            [clojure.java.io :as io])
+            [clojure.java.io :as io]
+            [valihuuto.config :refer [config]]
+            [clj-time.core :as t]
+            [clj-time.coerce :as c]
+            [valihuuto.db.db :as db])
   (:gen-class))
 
 (defn find-valihuuto [re text]
@@ -20,33 +24,52 @@
               out (io/output-stream file)]
     (io/copy in out)))
 
-(def rss-url
-  "https://www.eduskunta.fi/_layouts/15/feed.aspx?xsl=1&web=%2FFI%2Frss%2Dfeeds&page=8192fae7-172f-46ba-8605-75c1e750007a&wp=3527e156-7a72-443c-8698-9b5596317471&pageurl=%2FFI%2Frss%2Dfeeds%2FSivut%2FTaysistuntojen%2Dpoytakirjat%2DRSS%2Easpx")
-
-(defn get-filename []
-  (->> (feedme/parse rss-url)
-       (#(nth (:entries %) 1))
-       (#(str/split (:title %) #"\s+"))
-       (#(format "%s_%s.pdf" (first %) (str/replace (second %) #"\/"
-                                                    "+")))))
-
-(defn get-latest-valihuudot []
-  (let [filename (get-filename)
-        download-url (format "%s/%s" "https://www.eduskunta.fi/FI/vaski/Poytakirja/Documents"
+(defn get-valihuudot [title]
+  (let [split-name (str/split title #"\s+")
+        filename (format "%s_%s.pdf"
+                         (first split-name)
+                         (str/replace (second split-name) #"\/" "+"))
+        download-url
+        (format "%s/%s" "https://www.eduskunta.fi/FI/vaski/Poytakirja/Documents"
                              filename)
         file (format "/%s/%s" "tmp" filename)]
     (if (nil? (download-pdf download-url file))
       (remove #(str/starts-with? % "Puhemies")
               (find-valihuuto #"(?<=\[)(.*?)(?=\])" (text/extract file))))))
 
+(defn get-last-from-rss []
+  "This is called when db is empty and nothing has been tweeted yet"
+  (let [feed (feedme/parse (:rss-url config))
+        entry (last (:entries feed))
+        title (:title entry)
+        info {:huudettu (second (str/split (:content entry) #"\s+"))
+              :memo-version
+                        (first (re-find #"([^/]+)"
+                                        (second (str/split title #"\s+"))))}]
+    (tweeting/tweet (get-valihuudot title) info)))
+
+(defn get-from-rss-by-version [latest]
+  "Checks the state of tweets from db and if new memos exists, tweets from them"
+  (let [year
+        (t/year (c/from-sql-date (:viimeisin-twiitattu-pvm
+                                    latest)))
+        feed (feedme/parse (:rss-url config))
+        memo-name (format "%s%s/%s %s" "PTK " (inc (:versio latest)) year "vp")
+        filtered-match (filter #(= (:title %) memo-name) (:entries feed))
+        huudettu
+        (second (str/split (:content filtered-match) #"\s+"))]
+        info {:huudettu huudettu :memo-version (inc (:versio latest))}
+    (if (some? filtered-match)
+     (tweeting/tweet
+       (get-valihuudot (:title (first filtered-match))) info))))
+
 (defn -main
-  "I don't do a whole lot ... yet."
+  "Will check the situation with the tweets and tweet if suitable."
   [& args]
-  (println (get-latest-valihuudot)
-
-
-;;
-))
+  (let [latest (db/get-last-tweeted)]
+    (if (nil? latest)
+      (get-last-from-rss)
+      (get-from-rss-by-version latest))))
 
 
 

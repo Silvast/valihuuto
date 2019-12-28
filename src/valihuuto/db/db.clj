@@ -1,1 +1,24 @@
-(ns valihuuto.db.db)
+(ns valihuuto.db.db
+  (:require [next.jdbc :as jdbc]
+            [valihuuto.config :refer [config]]
+            [clj-time.local :as l]))
+
+
+(def ds (jdbc/get-datasource (:database-url config)))
+
+(defn get-last-tweeted []
+  "Find latest tweeted versio"
+(let [result (jdbc/execute! ds ["SELECT * FROM tila
+            WHERE versio = (SELECT MAX (versio)
+            FROM tila)"])]
+  (if (empty? result)
+    nil
+    {:id (:tila/id (first result))
+     :viimeisin-twiitattu-pvm (:tila/viimeisin_twiitattu_pvm (first result))
+     :versio (:tila/versio (first result))})))
+
+(defn save-tweeted-valihuuto [msg huudettu memo-versio]
+  (jdbc/execute! ds
+                 ["INSERT INTO valihuudot(valihuuto, poytakirja_versio,
+                 huudettu,twiitattu)
+                 VALUES (?,?,?,?)" msg memo-versio huudettu (l/local-now)]))
