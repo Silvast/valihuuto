@@ -33,42 +33,45 @@
                          (str/replace (second split-name) #"\/" "+"))
         download-url
         (format "%s/%s" "https://www.eduskunta.fi/FI/vaski/Poytakirja/Documents"
-                             filename)
+                filename)
         file (format "/%s/%s" "tmp" filename)]
     (if (nil? (download-pdf download-url file))
       (remove #(str/starts-with? % "Puhemies")
               (find-valihuuto #"(?<=\[)(.*?)(?=\])" (text/extract file))))))
 
-(defn get-huudettu-date [entry]
+(defn get-huudettu-date
   "Finds and formats date from entry"
+  [entry]
   (let [huudettu
         (second (str/split (:content entry) #"\s+"))
         custom-formatter (f/formatter "dd.MM.yyyy")]
     (f/parse custom-formatter huudettu)))
 
-(defn get-last-from-rss []
+(defn get-last-from-rss
   "This is called when db is empty and nothing has been tweeted yet"
+  []
   (let [feed (feedme/parse (:rss-url config))
         entry (last (:entries feed))
         title (:title entry)
         info {:huudettu (get-huudettu-date entry)
               :memo-version
-                        (first (re-find #"([^/]+)"
-                                        (second (str/split title #"\s+"))))}]
+              (first (re-find #"([^/]+)"
+                              (second (str/split title #"\s+"))))}]
     (tweeting/tweet (get-valihuudot title) info)))
 
-(defn get-from-rss-by-version [latest]
+(defn get-from-rss-by-version
   "Checks the state of tweets from db and if new memos exists, tweets from them"
+  [latest]
   (let [year
         (t/year (c/from-sql-date (:viimeisin-twiitattu-pvm
-                                   latest)))
+                                  latest)))
         feed (feedme/parse (:rss-url config))
         memo-name (format "%s%s/%s %s" "PTK " (inc (:versio latest)) year "vp")
         filtered-match (filter #(= (:title %) memo-name) (:entries feed))
         huudettu (get-huudettu-date (first filtered-match))
         info {:huudettu huudettu :memo-version (str (inc (:versio latest)))}]
     (if (some? filtered-match)
-     (tweeting/tweet
+      (tweeting/tweet
        (get-valihuudot (:title (first filtered-match))) info))))
 
 (defn -main

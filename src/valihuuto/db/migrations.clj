@@ -6,9 +6,9 @@
   (when-not *compile-files*
     (-> (Flyway/configure)
         (.dataSource
-          (:database-url config)
-          nil
-          nil)
+         (:database-url config)
+         nil
+         nil)
         (.load))))
 
 (defn migrate! []

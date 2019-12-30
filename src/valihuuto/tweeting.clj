@@ -10,10 +10,10 @@
 (defonce user-access-token-secret (System/getenv "TWITTER_ACCESS_TOKEN_SECRET"))
 
 (def creds (oauth/make-oauth-creds
-             app-consumer-key
-             app-consumer-secret
-             user-access-token
-             user-access-token-secret))
+            app-consumer-key
+            app-consumer-secret
+            user-access-token
+            user-access-token-secret))
 
 (defn tweet2 [valihuudot info]
   (doseq [msg valihuudot]
