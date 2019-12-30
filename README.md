@@ -1,11 +1,15 @@
 # valihuuto
 Tässäpä väälihuutobotin sorsat. 
+
 Homma toimii niin, että botti katsoo tilan kannasta ja jos aiempia huutoja ei
  ole, hakee rss-feedistä viimeisimmän (rss-feedissä on abt puolen vuoden
-  huudot). 
+  huudot). Koskapa pöytäkirjat eivät ole webissä yhdellä sivulla kivasti
+  , niin haen pdf:n, jonka sitten muutan tekstiksi ja etsin sielt
+  ä hakasulkeiden välistä ne varsinaiset huudot. 
 
 ## Installation
-Kloonaa sorsat ja tee uberjar. Tämä appsi haluaa db-urlin ympäristömuuttujana.
+Kloonaa sorsat ja tee uberjar. Tämä appsi haluaa db-urlin ympäristömuuttujana
+, kuten myös twitter-apin käyttäjähommelit.
  ``` 
 lein uberjar
 ```
@@ -29,21 +33,7 @@ FIXME: explanation
 
 FIXME: listing of options this app accepts.
 
-## Examples
-
-...
-
-### Bugs
-
-...
-
-### Any Other Sections
-### That You Think
-### Might be Useful
 
 ## License
 
-Copyright © 2019 FIXME
-
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
+Copyright © 2019 Anne-Mari Silvast
