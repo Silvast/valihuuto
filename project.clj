@@ -15,6 +15,8 @@
                  [clj-time "0.15.2"]
                  [seancorfield/next.jdbc "1.0.12"]
                  [org.slf4j/slf4j-simple "1.7.5"]
+                 [org.clojure/tools.logging "0.4.1"]
+                 [environ "1.1.0"]
                  [twitter-api "1.8.0" :exclusions [org.clojure/tools.logging]]]
   :plugins [[lein-cljfmt "0.6.0" :exclusions [org.clojure/tools.cli]]
             [lein-kibit "0.1.6"]

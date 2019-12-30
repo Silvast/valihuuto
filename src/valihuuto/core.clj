@@ -9,6 +9,8 @@
             [clj-time.coerce :as c]
             [clj-time.format :as f]
             [valihuuto.db.db :as db]
+            [clojure.tools.logging :as log]
+            [valihuuto.db.migrations :as m]
             [valihuuto.tweeting :as tweeting])
   (:gen-class))
 
@@ -71,13 +73,19 @@
         huudettu (get-huudettu-date (first filtered-match))
         info {:huudettu huudettu :memo-version (str (inc (:versio latest)))}]
     (if (some? filtered-match)
-      (tweeting/tweet
-       (get-valihuudot (:title (first filtered-match))) info))))
+      (do
+        (log/info "Found new huutos, tweeting them now.")
+        (tweeting/tweet
+         (get-valihuudot (:title (first filtered-match))) info)))))
 
 (defn -main
   "Will check the situation with the tweets and tweet if suitable."
   [& args]
   (let [latest (db/get-last-tweeted)]
+    (log/info "Running migrations")
+    (m/migrate!)
+    (log/info "Migrations done.")
+    (log/info "Fetching tweets")
     (if (nil? latest)
       (get-last-from-rss)
       (get-from-rss-by-version latest))))
