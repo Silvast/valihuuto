@@ -1,11 +1,24 @@
 # valihuuto
-
-FIXME: description
+Tässäpä väälihuutobotin sorsat. 
+Homma toimii niin, että botti katsoo tilan kannasta ja jos aiempia huutoja ei
+ ole, hakee rss-feedistä viimeisimmän (rss-feedissä on abt puolen vuoden
+  huudot). 
 
 ## Installation
+Kloonaa sorsat ja tee uberjar. Tämä appsi haluaa db-urlin ympäristömuuttujana.
+ ``` 
+lein uberjar
+```
+Kannan migraatiot voi ajaa helpohkosti:
 
-Download from http://example.com/FIXME.
-
+``` 
+lein dbmigrate
+```
+Kannan saa tyhjättyä 
+     ``` 
+    lein dbclean
+    ```
+    
 ## Usage
 
 FIXME: explanation

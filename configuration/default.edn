@@ -1,1 +1,2 @@
-{:database-url "jdbc:postgresql://localhost:5439/valihuutobot?user=valihuuto_user&password=valihuuto"}
+{:database-url "jdbc:postgresql://localhost:5439/valihuutobot?user=valihuuto_user&password=valihuuto"
+ :rss-url "https://www.eduskunta.fi/_layouts/15/feed.aspx?xsl=1&web=%2FFI%2Frss%2Dfeeds&page=8192fae7-172f-46ba-8605-75c1e750007a&wp=3527e156-7a72-443c-8698-9b5596317471&pageurl=%2FFI%2Frss%2Dfeeds%2FSivut%2FTaysistuntojen%2Dpoytakirjat%2DRSS%2Easpx"}

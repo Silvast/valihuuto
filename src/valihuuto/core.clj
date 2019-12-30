@@ -7,7 +7,9 @@
             [valihuuto.config :refer [config]]
             [clj-time.core :as t]
             [clj-time.coerce :as c]
-            [valihuuto.db.db :as db])
+            [clj-time.format :as f]
+            [valihuuto.db.db :as db]
+            [valihuuto.tweeting :as tweeting])
   (:gen-class))
 
 (defn find-valihuuto [re text]
@@ -37,12 +39,19 @@
       (remove #(str/starts-with? % "Puhemies")
               (find-valihuuto #"(?<=\[)(.*?)(?=\])" (text/extract file))))))
 
+(defn get-huudettu-date [entry]
+  "Finds and formats date from entry"
+  (let [huudettu
+        (second (str/split (:content entry) #"\s+"))
+        custom-formatter (f/formatter "dd.MM.yyyy")]
+    (f/parse custom-formatter huudettu)))
+
 (defn get-last-from-rss []
   "This is called when db is empty and nothing has been tweeted yet"
   (let [feed (feedme/parse (:rss-url config))
         entry (last (:entries feed))
         title (:title entry)
-        info {:huudettu (second (str/split (:content entry) #"\s+"))
+        info {:huudettu (get-huudettu-date entry)
               :memo-version
                         (first (re-find #"([^/]+)"
                                         (second (str/split title #"\s+"))))}]
@@ -52,13 +61,12 @@
   "Checks the state of tweets from db and if new memos exists, tweets from them"
   (let [year
         (t/year (c/from-sql-date (:viimeisin-twiitattu-pvm
-                                    latest)))
+                                   latest)))
         feed (feedme/parse (:rss-url config))
         memo-name (format "%s%s/%s %s" "PTK " (inc (:versio latest)) year "vp")
         filtered-match (filter #(= (:title %) memo-name) (:entries feed))
-        huudettu
-        (second (str/split (:content filtered-match) #"\s+"))]
-        info {:huudettu huudettu :memo-version (inc (:versio latest))}
+        huudettu (get-huudettu-date (first filtered-match))
+        info {:huudettu huudettu :memo-version (str (inc (:versio latest)))}]
     (if (some? filtered-match)
      (tweeting/tweet
        (get-valihuudot (:title (first filtered-match))) info))))
@@ -70,6 +78,3 @@
     (if (nil? latest)
       (get-last-from-rss)
       (get-from-rss-by-version latest))))
-
-
-
