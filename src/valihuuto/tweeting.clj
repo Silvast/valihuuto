@@ -20,6 +20,7 @@
 (defn tweet [valihuudot info]
   (doseq [msg valihuudot]
     (log/info "Now tweeting: " msg)
+    (log/info "info: " info)
     (rest/statuses-update :oauth-creds creds :params {:status msg})
     (db/save-tweeted-valihuuto! msg (:huudettu info) (:memo-version info))
     (db/save-tweeted-tila! (:huudettu info) (:memo-version info))
