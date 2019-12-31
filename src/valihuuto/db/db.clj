@@ -1,6 +1,7 @@
 (ns valihuuto.db.db
   (:require [next.jdbc :as jdbc]
             [valihuuto.config :refer [config]]
+            [clojure.tools.logging :as log]
             [clj-time.local :as l]
             [clj-time.coerce :as c]))
 
@@ -19,6 +20,9 @@
        :versio (:tila/versio (first result))})))
 
 (defn save-tweeted-valihuuto! [msg huudettu memo-versio]
+  (log/info "from db: " msg)
+  (log/info "from db huudettu: " huudettu)
+  (log/info "from db memo-versio" memo-versio)
   (jdbc/execute! ds
                  ["INSERT INTO valihuudot(valihuuto, poytakirja_versio,
                  huudettu,twiitattu)
