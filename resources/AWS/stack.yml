@@ -4,7 +4,7 @@ Resources:
     Properties:
       InstanceType: t2.micro
       ImageId: ami-03ef731cc103c9f09
-      KeyName: valihuuto-key
+      KeyName: keyname
       SecurityGroups:
         - !Ref AppNodeSG
       UserData: !Base64 |
