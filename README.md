@@ -31,7 +31,7 @@ lein dbclean
 
     $ java -jar valihuuto-0.1.0-standalone.jar [args]
 
-##AWS-juttuset 
+## AWS-juttuset 
 
 Resources-kansiosta löytyy stack.yml, jota voi käyttää cloudformationin
  kanssa. Tämä luo ec2-instanssin sekä rds:ään kannan. Samalla asennellaan
