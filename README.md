@@ -1,5 +1,5 @@
 # valihuuto
-Tässäpä väälihuutobotin sorsat. 
+Tässäpä välihuutobotin sorsat. 
 
 Homma toimii niin, että botti katsoo tilan kannasta ja jos aiempia huutoja ei
  ole, hakee rss-feedistä viimeisimmän (rss-feedissä on abt puolen vuoden
