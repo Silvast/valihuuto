@@ -6,7 +6,7 @@ Homma toimii niin, että botti katsoo tilan kannasta ja jos aiempia huutoja ei
   huudot). Koskapa pöytäkirjat eivät ole webissä yhdellä sivulla kivasti
   , niin haen pdf:n, jonka sitten muutan tekstiksi ja etsin sieltä hakasulkeiden välistä ne varsinaiset huudot. 
 
-## Installation
+## Asennushommelit
 Kloonaa sorsat ja tee uberjar. Tämä appsi haluaa db-urlin ympäristömuuttujana
 , kuten myös twitter-apin käyttäjähommelit.
  ``` 
@@ -21,9 +21,10 @@ Tietokantana postgres ja kannattaa käyttää esmes 10.6. -versiota, niin tuo
 lein dbmigrate
 ```
 Kannan saa tyhjättyä 
-     ``` 
-    lein dbclean
-    ```
+
+ ``` 
+lein dbclean
+```
     
 ## Käyttö
 
@@ -31,6 +32,7 @@ Kannan saa tyhjättyä
     $ java -jar valihuuto-0.1.0-standalone.jar [args]
 
 ##AWS-juttuset 
+
 Resources-kansiosta löytyy stack.yml, jota voi käyttää cloudformationin
  kanssa. Tämä luo ec2-instanssin sekä rds:ään kannan. Samalla asennellaan
   javat ja leiningenit. Tähän vielä askarreltavana ci-putki niin, ett
