@@ -1,5 +1,6 @@
 # valihuuto
-Tässäpä välihuutobotin sorsat. 
+Tässäpä välihuutobotin sorsat. Härpäke on tehty clojurella, koska clojure on
+ rakkautta. 
 
 Homma toimii niin, että botti katsoo tilan kannasta ja jos aiempia huutoja ei
  ole, hakee rss-feedistä viimeisimmän (rss-feedissä on abt puolen vuoden
