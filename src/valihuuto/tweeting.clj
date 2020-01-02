@@ -18,11 +18,16 @@
             user-access-token-secret))
 
 (defn tweet [valihuudot info]
+  (rest/statuses-update :oauth-creds creds :params
+                        {:status (str "Twiitattava pöytäkirja: " (:memo-url
+                                                                   info))})
   (doseq [msg valihuudot]
     (log/info "Now tweeting: " msg)
     (log/info "info: " info)
     (try
-    (rest/statuses-update :oauth-creds creds :params {:status msg})
+    (rest/statuses-update :oauth-creds creds :params
+     {:status msg})
+    (println msg)
     (catch clojure.lang.ExceptionInfo e
       (log/warn "Could not send a tweet, countered error: " e)))
     (db/save-tweeted-valihuuto! msg (:huudettu info) (:memo-version info))

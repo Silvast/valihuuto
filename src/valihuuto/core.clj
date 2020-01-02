@@ -38,8 +38,9 @@
                 filename)
         file (format "/%s/%s" "tmp" filename)]
     (if (nil? (download-pdf download-url file))
-      (remove #(str/starts-with? % "Puhemies")
-              (find-valihuuto #"(?<=\[)(.*?)(?=\])" (text/extract file))))))
+     {:valihuudot (remove #(str/starts-with? % "Puhemies")
+              (find-valihuuto #"(?<=\[)(.*?)(?=\])" (text/extract file)))
+      :memo-url download-url})))
 
 (defn get-huudettu-date
   "Finds and formats date from entry"
@@ -58,8 +59,11 @@
         info {:huudettu (get-huudettu-date entry)
               :memo-version
               (first (re-find #"([^/]+)"
-                              (second (str/split title #"\s+"))))}]
-    (tweeting/tweet (get-valihuudot title) info)))
+                              (second (str/split title #"\s+"))))}
+        valihuudot (get-valihuudot title)]
+    (tweeting/tweet (:valihuudot valihuudot) (assoc info :memo-url (:memo-url
+                                                                     valihuudot)
+                                                         ))))
 
 (defn get-from-rss-by-version
   "Checks the state of tweets from db and if new memos exists, tweets from them"
@@ -73,10 +77,12 @@
         huudettu (get-huudettu-date (first filtered-match))
         info {:huudettu huudettu :memo-version (str (inc (:versio latest)))}]
     (if (some? filtered-match)
-      (do
+      (let [valihuudot (get-valihuudot (:title (first filtered-match)))]
+       (do
         (log/info "Found new huutos, tweeting them now.")
-        (tweeting/tweet
-         (get-valihuudot (:title (first filtered-match))) info)))))
+        (tweeting/tweet (:valihuudot valihuudot) (assoc info :memo-url (:memo-url
+                                                                         valihuudot)
+                                                             )))))))
 
 (defn -main
   "Will check the situation with the tweets and tweet if suitable."
