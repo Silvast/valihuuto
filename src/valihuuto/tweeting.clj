@@ -19,8 +19,9 @@
 
 (defn tweet [valihuudot info]
   (rest/statuses-update :oauth-creds creds :params
-                        {:status (str "Twiittaan seuraavaksi välihuudot
-                        pöytäkirjasta: " (:memo-url info))})
+                        {:status
+                         (str "Twiittaan välihuudot pöytäkirjasta: "
+                              (:memo-url info))})
   (doseq [msg valihuudot]
     (log/info "Now tweeting: " msg)
     (log/info "info: " info)
