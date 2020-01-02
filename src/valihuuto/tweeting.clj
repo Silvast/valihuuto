@@ -28,7 +28,7 @@
     (rest/statuses-update :oauth-creds creds :params
      {:status msg})
     (println msg)
-    (catch clojure.lang.ExceptionInfo e
+    (catch Exception e
       (log/warn "Could not send a tweet, countered error: " e)))
     (db/save-tweeted-valihuuto! msg (:huudettu info) (:memo-version info))
     (db/save-tweeted-tila! (:huudettu info) (:memo-version info))
