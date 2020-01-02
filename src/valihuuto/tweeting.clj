@@ -21,7 +21,10 @@
   (doseq [msg valihuudot]
     (log/info "Now tweeting: " msg)
     (log/info "info: " info)
+    (try
     (rest/statuses-update :oauth-creds creds :params {:status msg})
+    (catch clojure.lang.ExceptionInfo e
+      (log/warn "Could not send a tweet, countered error: " e)))
     (db/save-tweeted-valihuuto! msg (:huudettu info) (:memo-version info))
     (db/save-tweeted-tila! (:huudettu info) (:memo-version info))
     (Thread/sleep 5000)))
