@@ -39,4 +39,4 @@
           (log/warn "Could not send a tweet, countered error: " e)))
       (db/save-tweeted-valihuuto! msg (:huudettu info) (:memo-version info))
       (db/save-tweeted-tila! (:huudettu info) (:memo-version info))
-      (Thread/sleep 5000))))
+      (Thread/sleep 500000))))
