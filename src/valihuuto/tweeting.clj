@@ -26,7 +26,7 @@
         status-id (atom (:id (:body response)))]
     (log/info "tweet-api response: " status-id)
     (log/info "tweet-api body: " (:body response))
-    (doseq [msg valihuudot]
+    (doseq [msg (take 299 valihuudot)]
       (log/info "Now tweeting: " msg)
       (log/info "info: " info)
       (try
