@@ -24,7 +24,7 @@
                                (str "Twiittaan välihuudot pöytäkirjasta: "
                                     (:memo-url info))})
         status-id (atom (:id (:body response)))]
-    (log/info "tweet-api response: " status-id)
+    (log/info "tweet-api response: " @status-id)
     (log/info "tweet-api body: " (:body response))
     (doseq [msg valihuudot]
       (log/info "Now tweeting: " msg)
@@ -33,7 +33,7 @@
         (let [reply-response (rest/statuses-update :oauth-creds creds :params
                                                    {:status msg
                                                     :in-reply-to-status-id
-                                                    status-id})]
+                                                            (deref status-id)})]
           (swap! status-id (:id (:body reply-response))))
         (catch Exception e
           (log/warn "Could not send a tweet, countered error: " e)))
