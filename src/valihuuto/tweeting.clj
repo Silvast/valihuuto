@@ -17,6 +17,15 @@
             user-access-token
             user-access-token-secret))
 
+(defn save-valihuudot [valihuudot info]
+  (doseq [msg valihuudot]
+    (try
+      (do
+        (db/save-tweeted-valihuuto! msg (:huudettu info) (:memo-version info))
+        (db/save-tweeted-tila! (:huudettu info) (:memo-version info)))
+      (catch Exception e
+        (log/warn "Could not save the valihuuto: " e)))))
+
 (defn tweet [valihuudot info]
   (let [response
         (rest/statuses-update :oauth-creds creds :params
@@ -37,14 +46,8 @@
                                                     })]
           ;(swap! status-id (:id (:body reply-response)))
           (log/info "New id: " (:id (:body reply-response)))
-          (log/info "New id type: " (type (:id (:body reply-response))))
-          )
+          (log/info "New id type: " (type (:id (:body reply-response)))))
         (catch Exception e
           (log/warn "Could not send a tweet, countered error: " e)))
-      (try
-        (do
-         (db/save-tweeted-valihuuto! msg (:huudettu info) (:memo-version info))
-         (db/save-tweeted-tila! (:huudettu info) (:memo-version info)))
-      (catch Exception e
-        (log/warn "Could not save the valihuuto: " e)))
-      (Thread/sleep 300000))))
+      (Thread/sleep 300000))
+    (save-valihuudot valihuudot info)))
