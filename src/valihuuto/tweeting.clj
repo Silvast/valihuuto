@@ -32,7 +32,7 @@
       (try
         (let [reply-response (rest/statuses-update :oauth-creds creds :params
                                                    {:status msg
-                                                    :in-reply-to_status-id
+                                                    :in-reply-to-status-id
                                                     status-id})]
           (swap! status-id (:id (:body reply-response))))
         (catch Exception e
