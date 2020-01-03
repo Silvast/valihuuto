@@ -41,6 +41,10 @@
           )
         (catch Exception e
           (log/warn "Could not send a tweet, countered error: " e)))
-      (db/save-tweeted-valihuuto! msg (:huudettu info) (:memo-version info))
-      (db/save-tweeted-tila! (:huudettu info) (:memo-version info))
+      (try
+        (do
+         (db/save-tweeted-valihuuto! msg (:huudettu info) (:memo-version info))
+         (db/save-tweeted-tila! (:huudettu info) (:memo-version info)))
+      (catch Exception e
+        (log/warn "Could not save the valihuuto: " e)))
       (Thread/sleep 300000))))
