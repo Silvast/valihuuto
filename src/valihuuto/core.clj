@@ -41,6 +41,7 @@
      {:valihuudot (remove #(or (str/starts-with? % "Puhemies")
                                (str/starts-with? % "Hälinää")
                                (str/starts-with? % "Välihuutoja")
+                               (str/starts-with? % "Keskustelu asiasta")
                                (str/starts-with? % "Naurua"))
               (find-valihuuto #"(?<=\[)(.*?)(?=\])" (text/extract file)))
       :memo-url download-url})))
