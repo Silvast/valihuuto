@@ -17,7 +17,7 @@
             user-access-token
             user-access-token-secret))
 
-(defn save-valihuudot [valihuudot info]
+(defn save-valihuudot! [valihuudot info]
   (doseq [msg valihuudot]
     (try
       (do
@@ -50,4 +50,4 @@
         (catch Exception e
           (log/warn "Could not send a tweet, countered error: " e)))
       (Thread/sleep 300000))
-    (save-valihuudot valihuudot info)))
+    (save-valihuudot! valihuudot info)))
