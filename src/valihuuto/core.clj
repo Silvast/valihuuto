@@ -38,7 +38,10 @@
                 filename)
         file (format "/%s/%s" "tmp" filename)]
     (if (nil? (download-pdf download-url file))
-     {:valihuudot (remove #(str/starts-with? % "Puhemies")
+     {:valihuudot (remove #(or (str/starts-with? % "Puhemies")
+                               (str/starts-with? % "Hälinää")
+                               (str/starts-with? % "Välihuutoja")
+                               (str/starts-with? % "Naurua"))
               (find-valihuuto #"(?<=\[)(.*?)(?=\])" (text/extract file)))
       :memo-url download-url})))
 

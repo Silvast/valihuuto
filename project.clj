@@ -14,7 +14,7 @@
                  [environ "1.1.0"]
                  [clj-time "0.15.2"]
                  [seancorfield/next.jdbc "1.0.12"]
-                 [org.slf4j/slf4j-simple "1.7.5"]
+                 ;;[org.slf4j/slf4j-simple "1.7.5"]
                  [org.apache.logging.log4j/log4j-api "2.11.1"]
                  [org.apache.logging.log4j/log4j-core "2.11.1"]
                  [org.apache.logging.log4j/log4j-slf4j-impl "2.11.1"]
@@ -32,6 +32,7 @@
             [lein-environ "1.1.0"]]
   :main ^:skip-aot valihuuto.core
   :target-path "target/%s"
+  :resource-paths ["configuration"]
   :aliases {"checkall" ["with-profile" "+dev" "do"
                         ["kibit"]
                         ["bikeshed"]
