@@ -27,27 +27,17 @@
         (log/warn "Could not save the valihuuto: " e)))))
 
 (defn tweet [valihuudot info]
-  (let [response
-        (rest/statuses-update :oauth-creds creds :params
+(rest/statuses-update :oauth-creds creds :params
                               {:status
                                (str "Twiittaan välihuudot pöytäkirjasta: "
                                     (:memo-url info))})
-        status-id (atom (:id (:body response)))]
-    (log/info "tweet-api response: " @status-id)
-    (log/info "tweet-api body: " (:body response))
     (doseq [msg valihuudot]
       (log/info "Now tweeting: " msg)
       (log/info "info: " info)
       (try
-        (let [reply-response (rest/statuses-update :oauth-creds creds :params
-                                                   {:status msg
-                                                    ;:in-reply-to-status-id
-                                                    ;        (deref status-id)
-                                                    })]
-          ;(swap! status-id (:id (:body reply-response)))
-          (log/info "New id: " (:id (:body reply-response)))
-          (log/info "New id type: " (type (:id (:body reply-response)))))
+        (rest/statuses-update :oauth-creds creds :params
+                                                   {:status msg})
         (catch Exception e
           (log/warn "Could not send a tweet, countered error: " e)))
       (Thread/sleep 300000))
-    (save-valihuudot! valihuudot info)))
+    (save-valihuudot! valihuudot info))
