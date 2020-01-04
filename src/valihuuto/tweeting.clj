@@ -20,9 +20,7 @@
 (defn save-valihuudot! [valihuudot info]
   (doseq [msg valihuudot]
     (try
-      (do
         (db/save-tweeted-valihuuto! msg (:huudettu info) (:memo-version info))
-        (db/save-tweeted-tila! (:huudettu info) (:memo-version info)))
       (catch Exception e
         (log/warn "Could not save the valihuuto: " e)))))
 
@@ -31,6 +29,7 @@
                               {:status
                                (str "Twiittaan välihuudot pöytäkirjasta: "
                                     (:memo-url info))})
+  (db/save-tweeted-tila! (:huudettu info) (:memo-version info))
     (doseq [msg valihuudot]
       (log/info "Now tweeting: " msg)
       (log/info "info: " info)
