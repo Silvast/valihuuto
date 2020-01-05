@@ -14,6 +14,9 @@
             [valihuuto.tweeting :as tweeting])
   (:gen-class))
 
+(def redundant-calls ["Puhemies" "Hälinää" "Välihuutoja" "Keskustelu asiasta"
+                      "Naurua" "Vastauspuheenvuoropyyntöjä" "Hälinää"])
+
 (defn find-valihuuto [re text]
   (let [matcher (re-matcher re text)]
     (loop [match (first (re-find matcher))
@@ -28,6 +31,9 @@
               out (io/output-stream file)]
     (io/copy in out)))
 
+(defn is-redunant? [huuto]
+  (some true? (map #(str/starts-with? huuto %) redundant-calls)))
+
 (defn get-valihuudot [title]
   (let [split-name (str/split title #"\s+")
         filename (format "%s_%s.pdf"
@@ -38,11 +44,7 @@
                 filename)
         file (format "/%s/%s" "tmp" filename)]
     (if (nil? (download-pdf download-url file))
-     {:valihuudot (remove #(or (str/starts-with? % "Puhemies")
-                               (str/starts-with? % "Hälinää")
-                               (str/starts-with? % "Välihuutoja")
-                               (str/starts-with? % "Keskustelu asiasta")
-                               (str/starts-with? % "Naurua"))
+     {:valihuudot (remove #(is-redunant? %)
               (find-valihuuto #"(?<=\[)(.*?)(?=\])" (text/extract file)))
       :memo-url download-url})))
 
