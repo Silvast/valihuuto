@@ -15,7 +15,7 @@
   (:gen-class))
 
 (def redundant-calls ["Puhemies" "Hälinää" "Välihuutoja" "Keskustelu asiasta"
-                      "Naurua" "Vastauspuheenvuoropyyntöjä" "Hälinää"])
+                      "Naurua" "Vastauspuheenvuoropyyntöjä"])
 
 (defn find-valihuuto [re text]
   (let [matcher (re-matcher re text)]

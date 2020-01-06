@@ -40,3 +40,9 @@
           (log/warn "Could not send a tweet, countered error: " e)))
       (Thread/sleep 600000))
     (save-valihuudot! valihuudot info))
+
+;(defn tweet-test [valihuudot info]
+;  (println "tweet" info)
+;  (doseq [msg valihuudot]
+;    (log/info "Now tweeting: " msg)
+;    (log/info "info: " info)))
