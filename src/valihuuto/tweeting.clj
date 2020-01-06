@@ -38,5 +38,5 @@
                                                    {:status msg})
         (catch Exception e
           (log/warn "Could not send a tweet, countered error: " e)))
-      (Thread/sleep 300000))
+      (Thread/sleep 600000))
     (save-valihuudot! valihuudot info))
