@@ -38,7 +38,9 @@
                                                    {:status msg})
         (catch Exception e
           (log/warn "Could not send a tweet, countered error: " e)))
-      (Thread/sleep 600000))
+      (log/info "Starting break")
+      (Thread/sleep 600000)
+      (log/info "Ending break"))
     (save-valihuudot! valihuudot info))
 
 ;(defn tweet-test [valihuudot info]

@@ -17,6 +17,9 @@
 (def redundant-calls ["Puhemies" "Hälinää" "Välihuutoja" "Keskustelu asiasta"
                       "Naurua" "Vastauspuheenvuoropyyntöjä"])
 
+(defn is-redunant? [huuto]
+  (some true? (map #(str/starts-with? huuto %) redundant-calls)))
+
 (defn find-valihuuto [re text]
   (let [matcher (re-matcher re text)]
     (loop [match (first (re-find matcher))
@@ -30,9 +33,6 @@
   (with-open [in (io/input-stream uri)
               out (io/output-stream file)]
     (io/copy in out)))
-
-(defn is-redunant? [huuto]
-  (some true? (map #(str/starts-with? huuto %) redundant-calls)))
 
 (defn get-valihuudot [title]
   (let [split-name (str/split title #"\s+")
@@ -67,9 +67,8 @@
               (first (re-find #"([^/]+)"
                               (second (str/split title #"\s+"))))}
         valihuudot (get-valihuudot title)]
-    (tweeting/tweet (:valihuudot valihuudot) (assoc info :memo-url (:memo-url
-                                                                     valihuudot)
-                                                         ))))
+    (tweeting/tweet (:valihuudot valihuudot)
+                    (assoc info :memo-url (:memo-url valihuudot)))))
 
 (defn get-from-rss-by-version
   "Checks the state of tweets from db and if new memos exists, tweets from them"
@@ -86,9 +85,8 @@
       (let [valihuudot (get-valihuudot (:title (first filtered-match)))]
        (do
         (log/info "Found new huutos, tweeting them now.")
-        (tweeting/tweet (:valihuudot valihuudot) (assoc info :memo-url (:memo-url
-                                                                         valihuudot)
-                                                             )))))))
+        (tweeting/tweet (:valihuudot valihuudot)
+                        (assoc info :memo-url (:memo-url valihuudot))))))))
 
 (defn -main
   "Will check the situation with the tweets and tweet if suitable."
