@@ -45,7 +45,7 @@
         file (format "/%s/%s" "tmp" filename)]
     (if (nil? (download-pdf download-url file))
      {:valihuudot (remove #(is-redunant? %)
-              (find-valihuuto #"(?<=\[)(.*?)(?=\])" (text/extract file)))
+              (find-valihuuto #"(?<=\[)((.*?|\n)*?)(?=\])" (text/extract file)))
       :memo-url download-url})))
 
 (defn get-huudettu-date

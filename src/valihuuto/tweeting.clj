@@ -24,6 +24,12 @@
       (catch Exception e
         (log/warn "Could not save the valihuuto: " e)))))
 
+(defn trim-text [text]
+  (-> text
+      (clojure.string/replace "\n" " ")
+      (clojure.string/replace "-\n" " ")
+      (clojure.string/replace "- " "")))
+
 (defn tweet [valihuudot info]
 (rest/statuses-update :oauth-creds creds :params
                               {:status
@@ -35,7 +41,7 @@
       (log/info "info: " info)
       (try
         (rest/statuses-update :oauth-creds creds :params
-                                                   {:status msg})
+                                                   {:status (trim-text msg)})
         (catch Exception e
           (log/warn "Could not send a tweet, countered error: " e)))
       (log/info "Starting break")
@@ -43,8 +49,8 @@
       (log/info "Ending break"))
     (save-valihuudot! valihuudot info))
 
-;(defn tweet-test [valihuudot info]
-;  (println "tweet" info)
-;  (doseq [msg valihuudot]
-;    (log/info "Now tweeting: " msg)
-;    (log/info "info: " info)))
+(defn tweet-test [valihuudot info]
+  (println "tweet" info)
+  (doseq [msg valihuudot]
+    (log/info "Now tweeting: " (trim-text msg))
+    (log/info "info: " info)))
