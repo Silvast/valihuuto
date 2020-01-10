@@ -14,7 +14,7 @@
             [valihuuto.tweeting :as tweeting])
   (:gen-class))
 
-(def redundant-calls ["Puhemies" "Hälinää" "Välihuutoja" "Keskustelu asiasta"
+(def redundant-calls ["Puhemies" "Puhe-\nmies" "Hälinää" "Välihuutoja" "Keskustelu asiasta"
                       "Naurua" "Vastauspuheenvuoropyyntöjä"])
 
 (defn is-redunant? [huuto]
