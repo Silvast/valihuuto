@@ -36,6 +36,8 @@
                                (str "Twiittaan välihuudot pöytäkirjasta: "
                                     (:memo-url info))})
   (db/save-tweeted-tila! (:huudettu info) (:memo-version info))
+  (let [amount (count valihuudot)
+        pause-duration (int (/ 36000000 amount))]
     (doseq [msg valihuudot]
       (log/info "Now tweeting: " msg)
       (log/info "info: " info)
@@ -44,13 +46,17 @@
                                                    {:status (trim-text msg)})
         (catch Exception e
           (log/warn "Could not send a tweet, countered error: " e)))
-      (log/info "Starting break")
-      (Thread/sleep 600000)
-      (log/info "Ending break"))
+      (log/info "Starting break for " pause-duration "milliseconds")
+      (Thread/sleep pause-duration)
+      (log/info "Ending break")))
     (save-valihuudot! valihuudot info))
 
 (defn tweet-test [valihuudot info]
   (println "tweet" info)
+ (let [amount (count valihuudot)
+       pause-duration (int (/ 36000000 amount))]
   (doseq [msg valihuudot]
     (log/info "Now tweeting: " (trim-text msg))
-    (log/info "info: " info)))
+    (log/info "Amount of valihuudot " amount)
+    (log/info "Starting break for " pause-duration "milliseconds")
+    (log/info "info: " info))))
