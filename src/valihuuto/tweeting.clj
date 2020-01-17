@@ -30,7 +30,7 @@
       (clojure.string/replace "-\n" " ")
       (clojure.string/replace "- " "")))
 
-(defn tweet [valihuudot info]
+(defn tweet-test [valihuudot info]
   (if (> (count valihuudot) 0)
     (rest/statuses-update :oauth-creds creds :params
                                   {:status
@@ -60,21 +60,21 @@
       (log/info "Ending break")))
     (save-valihuudot! valihuudot info))
 
-;(defn tweet-test [valihuudot info]
-;  (if (> (count valihuudot) 0)
-;    (log/info (str "Twiittaan välihuudot pöytäkirjasta: "
-;                                (:memo-url info)))
-;
-;    (log/info (str "Valitettavasti pöytäkirjassa: "
-;                                (:memo-url info) " - ei ollut yhtään
-;                                välihuutoa.")))
-; (let [amount (count valihuudot)
-;       pause-duration (int (/ 36000000 (max amount 1)))
-;       huudot (distinct (map #(trim-text %) valihuudot))]
-;  (doseq [msg huudot]
-;    (log/info "Now tweeting: " msg)
-;    ;(log/info "Amount of valihuudot " amount)
-;    ;(log/info "Starting break for " pause-duration "milliseconds")
-;    ;(log/info "info: " info)
-;
-;    )))
+(defn tweet [valihuudot info]
+  (if (> (count valihuudot) 0)
+    (log/info (str "Twiittaan välihuudot pöytäkirjasta: "
+                                (:memo-url info)))
+
+    (log/info (str "Valitettavasti pöytäkirjassa: "
+                                (:memo-url info) " - ei ollut yhtään
+                                välihuutoa.")))
+ (let [amount (count valihuudot)
+       pause-duration (int (/ 36000000 (max amount 1)))
+       huudot (distinct (map #(trim-text %) valihuudot))]
+  (doseq [msg huudot]
+    (log/info "Now tweeting: " msg)
+    ;(log/info "Amount of valihuudot " amount)
+    ;(log/info "Starting break for " pause-duration "milliseconds")
+    ;(log/info "info: " info)
+
+    )))
