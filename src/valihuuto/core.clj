@@ -14,7 +14,9 @@
             [valihuuto.tweeting :as tweeting])
   (:gen-class))
 
-(def redundant-calls ["Puhemies" "Puhe-\nmies" "Hälinää" "Välihuutoja" "Keskustelu asiasta"
+(def redundant-calls ["Puhemies koputtaa" "Puhe-\nmies koputtaa"
+                      "Pu-\nhemies koputtaa" "Hälinää"
+                      "Välihuutoja" "Keskustelu asiasta"
                       "Naurua" "Vastauspuheenvuoropyyntöjä"])
 
 (defn is-redunant? [huuto]
@@ -87,7 +89,6 @@
         (log/info "Found new huutos, tweeting them now.")
         (tweeting/tweet (:valihuudot valihuudot)
                         (assoc info :memo-url (:memo-url valihuudot))))))))
-
 (defn -main
   "Will check the situation with the tweets and tweet if suitable."
   [& args]

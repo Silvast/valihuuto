@@ -45,13 +45,14 @@
 
   (db/save-tweeted-tila! (:huudettu info) (:memo-version info))
   (let [amount (count valihuudot)
-        pause-duration (int (/ 36000000 (max amount 1)))]
-    (doseq [msg valihuudot]
+        pause-duration (int (/ 36000000 (max amount 1)))
+        huudot (distinct (map #(trim-text %) valihuudot))]
+    (doseq [msg huudot]
       (log/info "Now tweeting: " msg)
       (log/info "info: " info)
       (try
         (rest/statuses-update :oauth-creds creds :params
-                                                   {:status (trim-text msg)})
+                                                   {:status msg})
         (catch Exception e
           (log/warn "Could not send a tweet, countered error: " e)))
       (log/info "Starting break for " pause-duration "milliseconds")
@@ -59,18 +60,21 @@
       (log/info "Ending break")))
     (save-valihuudot! valihuudot info))
 
-(defn tweet-test [valihuudot info]
-  (if (> (count valihuudot) 0)
-    (log/info (str "Twiittaan välihuudot pöytäkirjasta: "
-                                (:memo-url info)))
-
-    (log/info (str "Valitettavasti pöytäkirjassa: "
-                                (:memo-url info) " - ei ollut yhtään
-                                välihuutoa.")))
- (let [amount (count valihuudot)
-       pause-duration (int (/ 36000000 (max amount 1)))]
-  (doseq [msg valihuudot]
-    (log/info "Now tweeting: " (trim-text msg))
-    (log/info "Amount of valihuudot " amount)
-    (log/info "Starting break for " pause-duration "milliseconds")
-    (log/info "info: " info))))
+;(defn tweet-test [valihuudot info]
+;  (if (> (count valihuudot) 0)
+;    (log/info (str "Twiittaan välihuudot pöytäkirjasta: "
+;                                (:memo-url info)))
+;
+;    (log/info (str "Valitettavasti pöytäkirjassa: "
+;                                (:memo-url info) " - ei ollut yhtään
+;                                välihuutoa.")))
+; (let [amount (count valihuudot)
+;       pause-duration (int (/ 36000000 (max amount 1)))
+;       huudot (distinct (map #(trim-text %) valihuudot))]
+;  (doseq [msg huudot]
+;    (log/info "Now tweeting: " msg)
+;    ;(log/info "Amount of valihuudot " amount)
+;    ;(log/info "Starting break for " pause-duration "milliseconds")
+;    ;(log/info "info: " info)
+;
+;    )))
