@@ -77,20 +77,21 @@
 (defn get-from-rss-by-version
   "Checks the state of tweets from db and if new memos exists, tweets from them"
   [latest]
-  (let [year
-        (t/year (c/from-sql-date (:viimeisin-twiitattu-pvm
-                                  latest)))
-        feed (feedme/parse (:rss-url config))
-        memo-name (format "%s%s/%s %s" "PTK " (inc (:versio latest)) year "vp")
-        filtered-match (filter #(= (:title %) memo-name) (:entries feed))
-        huudettu (get-huudettu-date (first filtered-match))
-        info {:huudettu huudettu :memo-version (str (inc (:versio latest)))}]
-    (if (some? filtered-match)
-      (let [valihuudot (get-valihuudot (:title (first filtered-match)))]
+  (let [feed (feedme/parse (:rss-url config))
+        memo-start (format "%s%s" "PTK " (inc (:versio latest)))
+        filtered-match (filter
+                         #(= (first (re-find #"([^\/]+)"
+                                             (:title %))) memo-start)
+                         (:entries feed))]
+    (if (not-empty filtered-match)
+      (let [huudettu (get-huudettu-date (first filtered-match))
+            info {:huudettu huudettu :memo-version (str (inc (:versio latest)))}
+            valihuudot (get-valihuudot (:title (first filtered-match)))]
        (do
         (log/info "Found new huutos, tweeting them now.")
         (tweeting/tweet (:valihuudot valihuudot)
-                        (assoc info :memo-url (:memo-url valihuudot))))))))
+                        (assoc info :memo-url (:memo-url valihuudot)))))
+      (log/info "No new tweets"))))
 
 (defn -main
   "Will check the situation with the tweets and tweet if suitable."
