@@ -17,10 +17,12 @@
 (def redundant-calls ["Puhemies koputtaa" "Puhe-\nmies koputtaa"
                       "Pu-\nhemies koputtaa" "Hälinää"
                       "Välihuutoja" "Keskustelu asiasta"
-                      "Naurua" "Vastauspuheenvuoropyyntöjä"])
+                      "Naurua" "Vastauspuheenvuoropyyntöjä"
+                      "Pöytäkirja PTK"])
 
 (defn is-redunant? [huuto]
-  (some true? (map #(str/starts-with? huuto %) redundant-calls)))
+  (some true? (map #(or (str/starts-with? huuto %) (str/includes? huuto %))
+                   redundant-calls)))
 
 (defn find-valihuuto [re text]
   (let [matcher (re-matcher re text)]
@@ -89,6 +91,7 @@
         (log/info "Found new huutos, tweeting them now.")
         (tweeting/tweet (:valihuudot valihuudot)
                         (assoc info :memo-url (:memo-url valihuudot))))))))
+
 (defn -main
   "Will check the situation with the tweets and tweet if suitable."
   [& args]
