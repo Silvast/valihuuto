@@ -33,9 +33,8 @@
 
     (rest/statuses-update :oauth-creds creds :params
                           {:status
-                           (str "Valitettavasti pöytäkirjassa: "
-                                (:memo-url info) " - ei ollut yhtään
-                                välihuutoa.")}))
+             (format "Valitettavasti pöytäkirjassa: %s ei ollut välihuutoja"
+                     (:memo-url info) )}))
 
   (db/save-tweeted-tila! (:huudettu info) (:memo-version info))
   (let [amount (count valihuudot)
@@ -63,6 +62,11 @@
 ;                                välihuutoa.")))
 ; (let [amount (count valihuudot)
 ;       pause-duration (int (/ 36000000 (max amount 1)))]
+;   (log/info
+;     (format "Valitettavasti pöytäkirjassa: %s ei ollut välihuutoja"
+;             (:memo-url info) ))
+; ;;(str "Ei välihuutoja pöytäkirjassa: " (:memo-url info))
+;
 ;  (doseq [msg valihuudot]
 ;    (log/info "Now tweeting: " msg)
 ;    ;(log/info "Amount of valihuudot " amount)
