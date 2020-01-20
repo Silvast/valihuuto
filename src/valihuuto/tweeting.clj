@@ -20,22 +20,16 @@
 (defn save-valihuudot! [valihuudot info]
   (doseq [msg valihuudot]
     (try
-        (db/save-tweeted-valihuuto! msg (:huudettu info) (:memo-version info))
+      (db/save-tweeted-valihuuto! msg (:huudettu info) (:memo-version info))
       (catch Exception e
         (log/warn "Could not save the valihuuto: " e)))))
-
-(defn trim-text [text]
-  (-> text
-      (clojure.string/replace "\n" " ")
-      (clojure.string/replace "-\n" " ")
-      (clojure.string/replace "- " "")))
 
 (defn tweet [valihuudot info]
   (if (> (count valihuudot) 0)
     (rest/statuses-update :oauth-creds creds :params
-                                  {:status
-                                   (str "Twiittaan välihuudot pöytäkirjasta: "
-                                        (:memo-url info))})
+                          {:status
+                           (str "Twiittaan välihuudot pöytäkirjasta: "
+                                (:memo-url info))})
 
     (rest/statuses-update :oauth-creds creds :params
                           {:status
@@ -45,20 +39,19 @@
 
   (db/save-tweeted-tila! (:huudettu info) (:memo-version info))
   (let [amount (count valihuudot)
-        pause-duration (int (/ 36000000 (max amount 1)))
-        huudot (distinct (map #(trim-text %) valihuudot))]
-    (doseq [msg huudot]
+        pause-duration (int (/ 36000000 (max amount 1)))]
+    (doseq [msg valihuudot]
       (log/info "Now tweeting: " msg)
       (log/info "info: " info)
       (try
         (rest/statuses-update :oauth-creds creds :params
-                                                   {:status msg})
+                              {:status msg})
         (catch Exception e
           (log/warn "Could not send a tweet, countered error: " e)))
       (log/info "Starting break for " pause-duration "milliseconds")
       (Thread/sleep  600000)
       (log/info "Ending break")))
-    (save-valihuudot! valihuudot info))
+  (save-valihuudot! valihuudot info))
 
 ;(defn tweet [valihuudot info]
 ;  (if (> (count valihuudot) 0)
@@ -69,9 +62,8 @@
 ;                                (:memo-url info) " - ei ollut yhtään
 ;                                välihuutoa.")))
 ; (let [amount (count valihuudot)
-;       pause-duration (int (/ 36000000 (max amount 1)))
-;       huudot (distinct (map #(trim-text %) valihuudot))]
-;  (doseq [msg huudot]
+;       pause-duration (int (/ 36000000 (max amount 1)))]
+;  (doseq [msg valihuudot]
 ;    (log/info "Now tweeting: " msg)
 ;    ;(log/info "Amount of valihuudot " amount)
 ;    ;(log/info "Starting break for " pause-duration "milliseconds")
