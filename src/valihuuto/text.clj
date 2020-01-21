@@ -19,7 +19,7 @@
                       "Naurua" "Vastauspuheenvuoropyyntöjä"
                       "Pöytäkirja PTK"
                       "/2019"
-                      " PTK"])
+                      "PTK"])
 
 (defn is-redunant? [huuto]
   (some true? (map #(or (str/starts-with? huuto %) (str/includes? huuto %))
