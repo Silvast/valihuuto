@@ -52,18 +52,18 @@
       (log/info "Ending break")))
   (save-valihuudot! valihuudot info))
 
-;(defn tweet-test [valihuudot info]
-;  (if (> (count valihuudot) 0)
-;    (log/info (str "Twiittaan välihuudot pöytäkirjasta: "
-;                                    (:memo-url info)))
-;    (log/info (format "Valitettavasti pöytäkirjassa: %s ei ollut välihuutoja"
-;                                       (:memo-url info))))
-;  (let [amount (count valihuudot)
-;        pause-duration (int (/ 36000000 (max amount 1)))]
-;    (log/info "Found " amount " of valihuudot")
-;    (doseq [msg valihuudot]
-;      (try
-;        (log/info msg)
-;        (catch Exception e
-;          (log/warn "Could not send a tweet, countered error: " e)))
-;      (Thread/sleep  1))))
+(defn tweet-test [valihuudot info]
+  (if (> (count valihuudot) 0)
+    (log/info (str "Twiittaan välihuudot pöytäkirjasta: "
+                                    (:memo-url info)))
+    (log/info (format "Valitettavasti pöytäkirjassa: %s ei ollut välihuutoja"
+                                       (:memo-url info))))
+  (let [amount (count valihuudot)
+        pause-duration (int (/ 36000000 (max amount 1)))]
+    (log/info "Found " amount " of valihuudot")
+    (doseq [msg valihuudot]
+      (try
+        (log/info msg)
+        (catch Exception e
+          (log/warn "Could not send a tweet, countered error: " e)))
+      (Thread/sleep  1))))
