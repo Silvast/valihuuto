@@ -17,7 +17,9 @@
                       "Pu-\nhemies koputtaa" "Hälinää"
                       "Välihuutoja" "Keskustelu asiasta"
                       "Naurua" "Vastauspuheenvuoropyyntöjä"
-                      "Pöytäkirja PTK"])
+                      "Pöytäkirja PTK"
+                      "/2019"
+                      " PTK"])
 
 (defn is-redunant? [huuto]
   (some true? (map #(or (str/starts-with? huuto %) (str/includes? huuto %))

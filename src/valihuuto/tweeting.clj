@@ -39,9 +39,9 @@
   (db/save-tweeted-tila! (:huudettu info) (:memo-version info))
   (let [amount (count valihuudot)
         pause-duration (int (/ 36000000 (max amount 1)))]
+    (log/info "Found " amount " of valihuudot")
     (doseq [msg valihuudot]
       (log/info "Now tweeting: " msg)
-      (log/info "info: " info)
       (try
         (rest/statuses-update :oauth-creds creds :params
                               {:status msg})
@@ -52,25 +52,18 @@
       (log/info "Ending break")))
   (save-valihuudot! valihuudot info))
 
-;(defn tweet [valihuudot info]
+;(defn tweet-test [valihuudot info]
 ;  (if (> (count valihuudot) 0)
 ;    (log/info (str "Twiittaan välihuudot pöytäkirjasta: "
-;                                (:memo-url info)))
-;
-;    (log/info (str "Valitettavasti pöytäkirjassa: "
-;                                (:memo-url info) " - ei ollut yhtään
-;                                välihuutoa.")))
-; (let [amount (count valihuudot)
-;       pause-duration (int (/ 36000000 (max amount 1)))]
-;   (log/info
-;     (format "Valitettavasti pöytäkirjassa: %s ei ollut välihuutoja"
-;             (:memo-url info) ))
-; ;;(str "Ei välihuutoja pöytäkirjassa: " (:memo-url info))
-;
-;  (doseq [msg valihuudot]
-;    (log/info "Now tweeting: " msg)
-;    ;(log/info "Amount of valihuudot " amount)
-;    ;(log/info "Starting break for " pause-duration "milliseconds")
-;    ;(log/info "info: " info)
-;
-;    )))
+;                                    (:memo-url info)))
+;    (log/info (format "Valitettavasti pöytäkirjassa: %s ei ollut välihuutoja"
+;                                       (:memo-url info))))
+;  (let [amount (count valihuudot)
+;        pause-duration (int (/ 36000000 (max amount 1)))]
+;    (log/info "Found " amount " of valihuudot")
+;    (doseq [msg valihuudot]
+;      (try
+;        (log/info msg)
+;        (catch Exception e
+;          (log/warn "Could not send a tweet, countered error: " e)))
+;      (Thread/sleep  1))))
