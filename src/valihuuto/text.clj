@@ -15,6 +15,7 @@
 
 (def redundant-calls ["Puhemies koputtaa" "Puhe-\nmies koputtaa"
                       "Pu-\nhemies koputtaa" "Hälinää"
+                      "Puhuja siirtyy puhujakorokkeelle"
                       "Välihuutoja" "Keskustelu asiasta"
                       "Naurua" "Vastauspuheenvuoropyyntöjä"
                       "Pöytäkirja PTK"
