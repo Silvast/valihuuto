@@ -24,7 +24,7 @@
       (catch Exception e
         (log/warn "Could not save the valihuuto: " e)))))
 
-(defn tweet [valihuudot info]
+(defn tweet-test [valihuudot info]
   (if (> (count valihuudot) 0)
     (rest/statuses-update :oauth-creds creds :params
                           {:status
@@ -33,7 +33,7 @@
 
     (rest/statuses-update :oauth-creds creds :params
                           {:status
-             (format "Valitettavasti pöytäkirjassa: %s ei ollut välihuutoja"
+             (format "Valitettavasti pöytäkirjassa: %s ei ollut välihuutoja."
                      (:memo-url info) )}))
 
   (db/save-tweeted-tila! (:huudettu info) (:memo-version info))
@@ -52,7 +52,7 @@
       (log/info "Ending break")))
   (save-valihuudot! valihuudot info))
 
-(defn tweet-test [valihuudot info]
+(defn tweet [valihuudot info]
   (if (> (count valihuudot) 0)
     (log/info (str "Twiittaan välihuudot pöytäkirjasta: "
                                     (:memo-url info)))
