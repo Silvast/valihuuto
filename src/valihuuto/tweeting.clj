@@ -24,7 +24,7 @@
       (catch Exception e
         (log/warn "Could not save the valihuuto: " e)))))
 
-(defn tweet-test [valihuudot info]
+(defn tweet [valihuudot info]
   (if (> (count valihuudot) 0)
     (rest/statuses-update :oauth-creds creds :params
                           {:status
@@ -52,7 +52,7 @@
       (log/info "Ending break")))
   (save-valihuudot! valihuudot info))
 
-(defn tweet [valihuudot info]
+(defn tweet-test [valihuudot info]
   (if (> (count valihuudot) 0)
     (log/info (str "Twiittaan välihuudot pöytäkirjasta: "
                                     (:memo-url info)))
