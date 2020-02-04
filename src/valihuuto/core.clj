@@ -31,16 +31,13 @@
 
 (defn get-from-rss-by-version
   "Checks the state of tweets from db and if new memos exists, tweets from them"
-  [latest]
+  [latest-versio year]
   (let [feed (feedme/parse (:rss-url config))
-        memo-start (format "%s%s" "PTK " (inc (:versio latest)))
-        filtered-match (filter
-                        #(= (first (re-find #"([^\/]+)"
-                                            (:title %))) memo-start)
-                        (:entries feed))]
+        memo-start (format "%s%s/%s%s" "PTK " (inc latest-versio) year " vp")
+        filtered-match (filter #(= (:title %) memo-start) (:entries feed))]
     (if (not-empty filtered-match)
       (let [huudettu (text-handling/get-huudettu-date (first filtered-match))
-            info {:huudettu huudettu :memo-version (str (inc (:versio latest)))}
+            info {:huudettu huudettu :memo-version (str (inc latest-versio))}
             valihuudot (text-handling/get-valihuudot (:title (first
                                                               filtered-match)))]
         (do
@@ -48,6 +45,7 @@
           (tweeting/tweet (:valihuudot valihuudot)
                           (assoc info :memo-url (:memo-url valihuudot)))))
       (log/info "No new tweets"))))
+
 
 (defn -main
   "Will check the situation with the tweets and tweet if suitable."
@@ -57,6 +55,10 @@
     (m/migrate!)
     (log/info "Migrations done.")
     (log/info "Fetching tweets")
-    (if (nil? latest)
-      (get-last-from-rss)
-      (get-from-rss-by-version latest))))
+    (cond
+      (nil? latest) (get-last-from-rss)
+      (= (:year config) (t/year (c/from-sql-date
+                           (:viimeisin-twiitattu-pvm
+                             latest))))
+      (get-from-rss-by-version (:versio latest) (:year config))
+      :else (get-from-rss-by-version 0 (:year config)))))

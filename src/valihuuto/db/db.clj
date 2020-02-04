@@ -6,18 +6,17 @@
             [clj-time.coerce :as c]))
 
 (def ds (jdbc/get-datasource (:database-url config)))
-
 (defn get-last-tweeted
   "Find latest tweeted versio"
   []
-  (let [result (jdbc/execute! ds ["SELECT * FROM tila
-            WHERE versio = (SELECT MAX (versio)
-            FROM tila)"])]
-    (when (seq result)
-      {:id (:tila/id (first result)),
-       :viimeisin-twiitattu-pvm
-       (:tila/viimeisin_twiitattu_pvm (first result)),
-       :versio (:tila/versio (first result))})))
+  (let [result (jdbc/execute! ds
+                              ["SELECT * FROM tila WHERE
+                              versio = (SELECT MAX (versio) FROM tila)"])]
+    (if-not (empty? result)
+         {:id (:tila/id (first result)),
+          :viimeisin-twiitattu-pvm
+          (:tila/viimeisin_twiitattu_pvm (first result)),
+          :versio (:tila/versio (first result))})))
 
 (defn save-tweeted-valihuuto! [msg huudettu memo-versio]
   (log/info "from db: " msg)
