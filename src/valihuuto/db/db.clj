@@ -11,7 +11,10 @@
   []
   (let [result (jdbc/execute! ds
                               ["SELECT * FROM tila WHERE
-                              versio = (SELECT MAX (versio) FROM tila)"])]
+                              date_trunc('year', viimeisin_twiitattu_pvm) >=
+                              date_trunc('year',current_date)
+                              ORDER BY versio
+                              LIMIT 1"])]
     (if-not (empty? result)
          {:id (:tila/id (first result)),
           :viimeisin-twiitattu-pvm

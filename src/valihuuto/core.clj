@@ -57,8 +57,9 @@
     (log/info "Fetching tweets")
     (cond
       (nil? latest) (get-last-from-rss)
-      (= (:year config) (t/year (c/from-sql-date
-                           (:viimeisin-twiitattu-pvm
-                             latest))))
+      (= (t/year (t/now)) (t/year (c/from-sql-date
+                                    (:viimeisin-twiitattu-pvm
+                                      latest))))
       (get-from-rss-by-version (:versio latest) (:year config))
       :else (get-from-rss-by-version 0 (:year config)))))
+
