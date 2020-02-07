@@ -13,13 +13,14 @@
                               ["SELECT * FROM tila WHERE
                               date_trunc('year', viimeisin_twiitattu_pvm) >=
                               date_trunc('year',current_date)
-                              ORDER BY versio
-                              LIMIT 1"])]
+                              ORDER BY versio DESC, id DESC LIMIT 1"])]
     (if-not (empty? result)
          {:id (:tila/id (first result)),
           :viimeisin-twiitattu-pvm
           (:tila/viimeisin_twiitattu_pvm (first result)),
           :versio (:tila/versio (first result))})))
+
+(get-last-tweeted)
 
 (defn save-tweeted-valihuuto! [msg huudettu memo-versio]
   (log/info "from db: " msg)
