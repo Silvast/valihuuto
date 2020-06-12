@@ -20,6 +20,8 @@
                  [org.apache.logging.log4j/log4j-slf4j-impl "2.11.1"]
                  [org.clojure/tools.logging "0.4.1"]
                  [environ "1.1.0"]
+                 [clojure.java-time "0.3.2"]
+                 [org.threeten/threeten-extra "1.2"]
                  [twitter-api "1.8.0" :exclusions [org.clojure/tools.logging]]]
   :plugins [[lein-cljfmt "0.6.0" :exclusions [org.clojure/tools.cli]]
             [lein-kibit "0.1.6"]
