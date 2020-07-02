@@ -76,7 +76,7 @@
   (let [amount (count valihuudot)
         pause-duration (int (/ 36000000 (max amount 1)))
         memo-url (get-memo-url kausi versio)]
-    (log/info (str "Twiittaan välihuudot pöytäkirjasta: "
+    (log/info (str "Twiittaan uusintana välihuudot pöytäkirjasta: "
                    memo-url))
     (doseq [msg valihuudot]
       (try
