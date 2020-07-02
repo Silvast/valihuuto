@@ -78,7 +78,11 @@
         memo-url (get-memo-url kausi versio)]
     (log/info (str "Twiittaan uusintana välihuudot pöytäkirjasta: "
                    memo-url))
+    (rest/statuses-update :oauth-creds creds :params
+                          {:status (str "Twiittaan uusintana välihuudot pöytäkirjasta: "
+                                        memo-url)})
     (doseq [msg valihuudot]
+      (log/info "Now tweeting: " msg)
       (try
         (rest/statuses-update :oauth-creds creds :params
                               {:status msg})
