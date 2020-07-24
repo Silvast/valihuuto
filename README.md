@@ -35,8 +35,8 @@ lein dbclean
 ## Muuta
 Tämä botti ei hyödynnä mitään aws lamda-henkisiä hienouksia, vaan pörrää perinteisesti
 kerran vuorokaudessa, kun cronjob potkaisee käyntiin
- skriptin, joka hakee tästä reposta uusimmat koodit, buildaa jarrin ja sen j
- älkeen leipoo tuon jarrin dockerkonttiin ajoon. Old school siis. 
+ skriptin, joka hakee tästä reposta uusimmat koodit, buildaa jarrin ja sen jälkeen
+ leipoo tuon jarrin dockerkonttiin ajoon. Old school siis. 
 
 ## TO DO
 
