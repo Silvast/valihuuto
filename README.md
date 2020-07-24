@@ -33,8 +33,8 @@ lein dbclean
     $ java -jar valihuuto-0.1.0-standalone.jar [args]
 
 ## Muuta
-Tämä botti ei hyödynnä mitään aws lamda-henkisiä hienouksia, vaan pörr
-ää perinteisesti kerran vuorokaudessa, kun cronjob potkaisee käyntiin
+Tämä botti ei hyödynnä mitään aws lamda-henkisiä hienouksia, vaan pörrää perinteisesti
+kerran vuorokaudessa, kun cronjob potkaisee käyntiin
  skriptin, joka hakee tästä reposta uusimmat koodit, buildaa jarrin ja sen j
  älkeen leipoo tuon jarrin dockerkonttiin ajoon. Old school siis. 
 
