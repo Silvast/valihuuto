@@ -38,7 +38,7 @@
     (jdbc/execute! ds
                    ["SELECT * FROM istuntotauko_tila WHERE istuntokausi_year
                    = ? AND istuntokausi_part = ?
-                   ORDER BY poytakirja_versio ASC LIMIT 1" kausi_year
+                   ORDER BY uudelleen_twiitattu DESC LIMIT 1" kausi_year
                     kausi_part])]
     (if-not (empty? result)
       {:id (:istuntotauko_tila/id (first result)),
