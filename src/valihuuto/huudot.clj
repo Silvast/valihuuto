@@ -13,6 +13,7 @@
             [java-time :as jt]
             [valihuuto.db.migrations :as m]
             [valihuuto.tweeting :as tweeting]
+             [clojure.tools.logging :as log]
             [valihuuto.text :as text-handling]))
 
 
@@ -100,13 +101,13 @@
       (tweeting/tweet-old-from-versio previous-kausi (db/get-first-versio
                                                previous-kausi)))))
 
+
 (defn search-huudot []
   (let [today  (jt/offset-date-time)
         latest (db/get-last-tweeted)
         istuntokausi (is-istuntokausi? (jt/minus today (jt/days 1)))]
     (cond
-      (nil? latest) (get-last-from-rss)
-      (= true istuntokausi) (get-from-rss-by-version (:versio latest) (jt/as
+      (= true istuntokausi) (get-from-rss-by-version (or (:versio latest) 1) (jt/as
                                                                         today
                                                                         :year))
       (= false istuntokausi) (get-huudot-from-last-kausi today))))
