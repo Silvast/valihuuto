@@ -25,7 +25,7 @@
                    {:year 2020 :kausi (jt/interval (jt/offset-date-time 2020 9 01)
                                                   (jt/offset-date-time 2020 12 22))
                     :part 2}
-                   {:year 2021 :kausi (jt/interval (jt/offset-date-time 2021 2 04)
+                   {:year 2021 :kausi (jt/interval (jt/offset-date-time 2021 2 02)
                                                   (jt/offset-date-time 2021 6
                                                                        30 23
                                                                        59))
