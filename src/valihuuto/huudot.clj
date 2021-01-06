@@ -97,7 +97,7 @@
                                      previous-kausi))]
     (if (some? last-tweeted-versio)
       (tweeting/tweet-old-from-versio previous-kausi
-                                      (inc (Integer. last-tweeted-versio)))
+                                      (Integer. last-tweeted-versio))
       (tweeting/tweet-old-from-versio previous-kausi (db/get-first-versio
                                                previous-kausi)))))
 

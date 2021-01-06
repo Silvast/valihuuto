@@ -93,14 +93,14 @@
 
 (defn tweet-old-from-versio [kausi versio]
   (let [valihuudot (atom ())
-        version (atom versio)]
+        version (atom versio)]             
     (while (empty? @valihuudot)
       (do
-        (let [huudot (db/get-huudot kausi @version)
-              uusiversio (swap! version inc)]
+         (swap! version inc)
+        (let [huudot (db/get-huudot kausi @version)]
           (if (not-empty huudot)
             (reset! valihuudot huudot)
             (log/info "ei huutoja"))
           (log/info "new version" @version)
           (log/info "new valihuuto" @valihuudot))))
-    (tweet-and-save-istuntotauko @valihuudot kausi @version)))
+(tweet-and-save-istuntotauko @valihuudot kausi @version)))
