@@ -134,6 +134,8 @@
   (let [today  (jt/offset-date-time)
         latest (db/get-last-tweeted)
         istuntokausi (is-istuntokausi? (jt/minus today (jt/days 1)))]
+    (log/info "latest:")
+    (log/info latest)
     (cond
       (= true istuntokausi) (get-from-rss-by-version (or (:versio latest) 1) (jt/as today :year))
       (= false istuntokausi) (get-huudot-from-last-kausi today))))
