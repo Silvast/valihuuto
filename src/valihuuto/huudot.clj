@@ -99,6 +99,8 @@
         memo-start2 (format "%s%s/%s%s" "PTK " (inc latest-versio) (dec year) " vp")
         filtered-match (filter #(= (:title %) memo-start) (:entries feed))
         filtered-match2 (filter #(= (:title %) memo-start2) (:entries feed))]
+    (log/info (some? (not-empty filtered-match)))
+    (log/info (some? (not-empty filtered-match2)))
     (cond
       (some? (not-empty filtered-match)) (make-tweets filtered-match latest-versio)
       (some? (not-empty filtered-match2)) (make-tweets filtered-match2 latest-versio)
