@@ -54,6 +54,16 @@
                                                    (jt/offset-date-time 2023
                                                                         12 22 23
                                                                         59))
+                    :part 2}
+                   {:year 2024 :kausi (jt/interval (jt/offset-date-time 2024 2 04)
+                                                   (jt/offset-date-time 2024 6
+                                                                        30 23
+                                                                        59))
+                    :part 1}
+                   {:year 2024 :kausi (jt/interval (jt/offset-date-time 2024 9 01)
+                                                   (jt/offset-date-time 2024
+                                                                        12 22 23
+                                                                        59))
                     :part 2}])
 
 (defn get-last-from-rss
@@ -70,23 +80,28 @@
     (tweeting/tweet (:valihuudot valihuudot)
                     (assoc info :memo-url (:memo-url valihuudot)))))
 
+(defn make-tweets [filtered-match latest-versio]
+  (let [huudettu (text-handling/get-huudettu-date (first filtered-match))
+        info {:huudettu huudettu :memo-version (str (inc latest-versio))}
+        valihuudot (text-handling/get-valihuudot (:title (first
+                                                          filtered-match)))]
+    (do
+      (log/info "Found new huutos, tweeting them now.")
+      (tweeting/tweet (:valihuudot valihuudot)
+                      (assoc info :memo-url (:memo-url valihuudot))))))
+
 (defn get-from-rss-by-version
   "Checks the state of tweets from db and if new memos exists, tweets from them"
   [latest-versio year]
   (let [feed (feedme/parse (:rss-url config))
         memo-start (format "%s%s/%s%s" "PTK " (inc latest-versio) year " vp")
-        filtered-match (filter #(= (:title %) memo-start) (:entries feed))]
-    (if (not-empty filtered-match)
-      (let [huudettu (text-handling/get-huudettu-date (first filtered-match))
-            info {:huudettu huudettu :memo-version (str (inc latest-versio))}
-            valihuudot (text-handling/get-valihuudot (:title (first
-                                                              filtered-match)))]
-        (do
-          (log/info "Found new huutos, tweeting them now.")
-          (tweeting/tweet (:valihuudot valihuudot)
-                          (assoc info :memo-url (:memo-url valihuudot)))))
-      (log/info "No new tweets"))))
-
+        memo-start2 (format "%s%s/%s%s" "PTK " (inc latest-versio) (dec year) " vp")
+        filtered-match (filter #(= (:title %) memo-start) (:entries feed))
+        filtered-match2 (filter #(= (:title %) memo-start2) (:entries feed))]
+    (cond
+      (not-empty filtered-match) (make-tweets filtered-match latest-versio)
+      (not-empty filtered-match2) (make-tweets filtered-match2 latest-versio)
+      :else (log/info "No new tweets"))))
 
 (defn is-istuntokausi? [day]
   (let [kaudet (filter #(= (:year %) (jt/as day :year)) istuntokausi)
@@ -117,7 +132,5 @@
         latest (db/get-last-tweeted)
         istuntokausi (is-istuntokausi? (jt/minus today (jt/days 1)))]
     (cond
-      (= true istuntokausi) (get-from-rss-by-version (or (:versio latest) 1) (jt/as
-                                                                              today
-                                                                              :year))
+      (= true istuntokausi) (get-from-rss-by-version (or (:versio latest) 1) (jt/as today :year))
       (= false istuntokausi) (get-huudot-from-last-kausi today))))
