@@ -16,18 +16,15 @@
                               viimeisin_twiitattu_pvm,
                               versio,
                               to_char(viimeisin_twiitattu_pvm, 'YYYY') as year
-                              FROM tila WHERE
-                              date_trunc('year', viimeisin_twiitattu_pvm) >=
-                              date_trunc('year',current_date)
-                              ORDER BY versio DESC, id DESC LIMIT 1"])]
+                              FROM tila
+                              ORDER BY created_at DESC LIMIT 1;"])]
     (if-not (empty? result)
-         {:id (:tila/id (first result)),
-          :viimeisin-twiitattu-pvm
-          (:tila/viimeisin_twiitattu_pvm (first result)),
-          :versio (:tila/versio (first result))
-          :year (:year (first result))})))
+      {:id (:tila/id (first result)),
+       :viimeisin-twiitattu-pvm
+       (:tila/viimeisin_twiitattu_pvm (first result)),
+       :versio (:tila/versio (first result))
+       :year (:year (first result))})))
 
-(get-last-tweeted)
 
 (defn get-istuntotauko-tweeted
   "Find newly tweeted huutos from particular istuntokausi"
@@ -35,15 +32,15 @@
   (let [kausi_year (:year kausi)
         kausi_part (:part kausi)
         result
-    (jdbc/execute! ds
-                   ["SELECT * FROM istuntotauko_tila WHERE istuntokausi_year
+        (jdbc/execute! ds
+                       ["SELECT * FROM istuntotauko_tila WHERE istuntokausi_year
                    = ? AND istuntokausi_part = ?
                    ORDER BY uudelleen_twiitattu DESC LIMIT 1" kausi_year
-                    kausi_part])]
+                        kausi_part])]
     (if-not (empty? result)
       {:id (:istuntotauko_tila/id (first result)),
        :uudelleen-twiitattu-pvm
-           (:istuntotauko_tila/uudelleen_twiitattu (first result)),
+       (:istuntotauko_tila/uudelleen_twiitattu (first result)),
        :versio (:istuntotauko_tila/poytakirja_versio (first result))
        :year (:istuntotauko_tila/istuntokausi_year (first result))
        :part (:istuntotauko_tila/istuntokausi_part (first result))})))
@@ -52,22 +49,22 @@
   (let [kausi_start (jt/local-date (jt/start (:kausi kausi)) "UTC+3")
         kausi_end (jt/local-date (jt/end (:kausi kausi)) "UTC+3")
         result (jdbc/execute! ds
-                       ["SELECT poytakirja_versio FROM valihuudot
+                              ["SELECT poytakirja_versio FROM valihuudot
                        WHERE huudettu >= ? AND huudettu <  ?" kausi_start
-                        kausi_end])]
+                               kausi_end])]
 
-      (Integer. (:valihuudot/poytakirja_versio (first result)))))
+    (Integer. (:valihuudot/poytakirja_versio (first result)))))
 
 (defn get-huudot [kausi versio]
   (let [kausi_year (:year kausi)
         versio (str versio)
         result (jdbc/execute! ds
-                       ["SELECT valihuuto FROM valihuudot WHERE
+                              ["SELECT valihuuto FROM valihuudot WHERE
                        extract(year from huudettu)
                    = ? AND poytakirja_versio = ?" kausi_year
-                        versio])]
-      (if-not (empty? result)
-        (map #(:valihuudot/valihuuto %) result))))
+                               versio])]
+    (if-not (empty? result)
+      (map #(:valihuudot/valihuuto %) result))))
 
 
 (defn save-tweeted-valihuuto! [msg huudettu memo-versio]
@@ -91,11 +88,11 @@
         version (str versio)
         huudettu
         (:valihuudot/huudettu (first
-                                                            (jdbc/execute! ds
-                                ["SELECT huudettu FROM valihuudot WHERE
+                               (jdbc/execute! ds
+                                              ["SELECT huudettu FROM valihuudot WHERE
                        extract(year from huudettu)
                    = ? AND poytakirja_versio = ? LIMIT 1" kausi_year
-                                 version])))
+                                               version])))
         twiitattu (jt/offset-date-time)]
 
 
