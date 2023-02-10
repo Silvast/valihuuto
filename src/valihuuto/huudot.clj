@@ -81,6 +81,7 @@
                     (assoc info :memo-url (:memo-url valihuudot)))))
 
 (defn make-tweets [filtered-match latest-versio]
+  (log/info "Make new tweets")
   (let [huudettu (text-handling/get-huudettu-date (first filtered-match))
         info {:huudettu huudettu :memo-version (str (inc latest-versio))}
         valihuudot (text-handling/get-valihuudot (:title (first
