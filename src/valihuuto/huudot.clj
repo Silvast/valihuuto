@@ -99,8 +99,8 @@
         filtered-match (filter #(= (:title %) memo-start) (:entries feed))
         filtered-match2 (filter #(= (:title %) memo-start2) (:entries feed))]
     (cond
-      (not-empty filtered-match) (make-tweets filtered-match latest-versio)
-      (not-empty filtered-match2) (make-tweets filtered-match2 latest-versio)
+      (some? (not-empty filtered-match)) (make-tweets filtered-match latest-versio)
+      (some? (not-empty filtered-match2)) (make-tweets filtered-match2 latest-versio)
       :else (log/info "No new tweets"))))
 
 (defn is-istuntokausi? [day]
