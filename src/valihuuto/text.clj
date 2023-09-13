@@ -56,13 +56,8 @@
 
 (defn get-valihuudot [title]
   (let [split-name (str/split title #"\s+")
-        filename (format "%s_%s.pdf"
-                         (first split-name)
-                         (str/replace (second split-name) #"\/" "+"))
-        download-url
-        (format "%s/%s" "https://www.eduskunta.fi/FI/vaski/Poytakirja/Documents"
-                filename)
-        file (format "/%s/%s" "tmp" filename)]
+         download-url (format "%s%s%s" "https://s3-eu-west-1.amazonaws.com/eduskunta-avoindata-documents-prod/vaski%2FPTK-" (str/replace (second split-name) #"\/" "%2B") "-vp.pdf")
+        ]
     (if (nil? (download-pdf download-url file))
       {:valihuudot (find-valihuudot file)
        :memo-url download-url})))
